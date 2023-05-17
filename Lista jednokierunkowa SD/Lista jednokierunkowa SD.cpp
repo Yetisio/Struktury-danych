@@ -5,19 +5,20 @@ using namespace std;
 
 class Node {
 public:
-    int dest;
-    int weight;
-    Node* next;
+    int dest; //wierzcholek
+    int weight; //waga krawedzi
+    Node* next; //wskaznik na nastepny wezel
 };
 
 class List {
 private:
-    int V;
-    Node** adjList;
-    int* parent;
-    int* key;
-    bool* mstSet;
+    int V; //liczba wierzcholkow grafu
+    Node** adjList; //lista sasiedztwa
+    int* parent; //tablica rodzica 
+    int* key; // tablica wag krawedzi
+    bool* mstSet; // tablica sprawdzajaca czy wierzcholek juz jest
 public:
+    //konstruktor przyjmujacy liczbe wierzcholkow, tworzocy tablice i przypisanie im konkretynch wartosci
     List(int V) {
         this->V = V;
         adjList = new Node * [V];
@@ -33,7 +34,7 @@ public:
             mstSet[i] = false;
         }
     }
-
+    //usuawanie zaalakowanej pamieci tablic i listy
     ~List() {
         delete[] parent;
         delete[] key;
@@ -48,7 +49,7 @@ public:
         }
         delete[] adjList;
     }
-
+    //dodawanie krawedzi miedzy wierzcholkami poczatkowym a nastepnym wskaznaym i przypisujacy jej wage 
     void addEdge(int src, int dest, int weight) {
         Node* newNode = new Node();
         newNode->dest = dest;
@@ -56,7 +57,7 @@ public:
         newNode->next = adjList[src];
         adjList[src] = newNode;
     }
-
+    //funkcja zwracajaca wierzcholek o najmniejszej wadze ktory jeszcze nie jest w Minimalnym Drzewie Rozpinajacym
     int minKey() {
         int min = INT_MAX, minIndex;
         for (int v = 0; v < V; v++) {
@@ -67,7 +68,7 @@ public:
         }
         return minIndex;
     }
-
+    //wypisanie minimalnego drzewa rozpinajacego 
     void printMST() {
         cout << "Minimalne drzewo rozpinajace: " << endl;
         cout << "Krawedzie     Waga" << endl;
@@ -75,7 +76,11 @@ public:
             cout << parent[i] << " - " << i << " \t\t" << key[i] << endl;
         }
     }
-
+    //algorytm prima
+    //szukamy wierzcholka o najmniejszej wadze ktory jeszcze nie jest w MST
+    //nastepnie dodajemy ten wierzcholek i odhaczamy go jako ze byl juz odwiedzony
+    //sprawdzemy liste sasiedztwa dla danego wierzcholka i ponownie sprawdzamy wage dla tych sasiednich wierzcholkow
+    //tak do uzyskania MST
     void primMST() {
         key[0] = 0;
         parent[0] = -1;
