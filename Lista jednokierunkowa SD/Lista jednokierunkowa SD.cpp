@@ -101,7 +101,8 @@ public:
         printMST();
     }
 };
-
+//2 formy kolejki prio, 3 reprezentacje grafow
+//generator grafow
 int main() {
     int V = 5;
     List graph(V);
