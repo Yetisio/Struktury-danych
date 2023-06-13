@@ -1,8 +1,0 @@
-﻿  Kolejka Priorytetowa na kopcu z generatorem.cpp
-C:\Users\Lenovo\Desktop\Struktury-danych\Kolejka Priorytetowa na kopcu z generatorem\Kolejka Priorytetowa na kopcu z generatorem.cpp(228,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
-C:\Users\Lenovo\Desktop\Struktury-danych\Kolejka Priorytetowa na kopcu z generatorem\Kolejka Priorytetowa na kopcu z generatorem.cpp(38,23): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-C:\Users\Lenovo\Desktop\Struktury-danych\Kolejka Priorytetowa na kopcu z generatorem\Kolejka Priorytetowa na kopcu z generatorem.cpp(33): message : podczas kompilowania funkcji składowej „void PriorityQueue<int>::heapifyDown(int)” klasy klasa szablon
-C:\Users\Lenovo\Desktop\Struktury-danych\Kolejka Priorytetowa na kopcu z generatorem\Kolejka Priorytetowa na kopcu z generatorem.cpp(68): message : zobacz odwołanie do kompilowanego tworzenia wystąpienia „void PriorityQueue<int>::heapifyDown(int)” funkcji szablon
-C:\Users\Lenovo\Desktop\Struktury-danych\Kolejka Priorytetowa na kopcu z generatorem\Kolejka Priorytetowa na kopcu z generatorem.cpp(94): message : zobacz odwołanie do kompilowanego tworzenia wystąpienia „PriorityQueue<int>” klasy klasa szablon
-C:\Users\Lenovo\Desktop\Struktury-danych\Kolejka Priorytetowa na kopcu z generatorem\Kolejka Priorytetowa na kopcu z generatorem.cpp(41,24): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-  Kolejka Priorytetowa na kopcu z generatorem.vcxproj -> C:\Users\Lenovo\Desktop\Struktury-danych\Kolejka Priorytetowa na kopcu z generatorem\Debug\Kolejka Priorytetowa na kopcu z generatorem.exe

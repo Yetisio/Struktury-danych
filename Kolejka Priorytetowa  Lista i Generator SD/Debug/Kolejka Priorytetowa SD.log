@@ -1,0 +1,4 @@
+﻿  Kolejka Priorytetowa SD.cpp
+C:\Users\Admin\Desktop\Struktury-danych\Kolejka Priorytetowa SD\Kolejka Priorytetowa SD.cpp(220,15): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+  LINK : nie znaleziono elementu C:\Users\Admin\Desktop\Struktury-danych\Kolejka Priorytetowa SD\Debug\Kolejka Priorytetowa SD.exe ani nie został on skompilowany podczas ostatniego konsolidowania przyrostowego; zostanie wykonana pełna konsolidacja
+  Kolejka Priorytetowa SD.vcxproj -> C:\Users\Admin\Desktop\Struktury-danych\Kolejka Priorytetowa SD\Debug\Kolejka Priorytetowa SD.exe
