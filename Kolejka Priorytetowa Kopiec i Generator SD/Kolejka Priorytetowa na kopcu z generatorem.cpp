@@ -20,6 +20,8 @@ private:
 
     vector<Node> heap; // tablica przechowująca elementy kolejki
 
+    //naprawa kopca po wstawieniu nowego elementu
+    //polega na porownaniu prio elementu na miejscu index z prio rodzica jesli mniejszy zamien je miejscami, robi sie do czasu wiekszego lub rownego prio z rodzicem
     void heapifyUp(int index) {
         while (index > 0) {
             int parentIndex = (index - 1) / 2;
@@ -32,7 +34,10 @@ private:
             }
         }
     }
-
+    //naprawa kopca po usuniecie jakiegos elementu lub zmiejszeniu jego prio
+    //polega na porownaniu pozycji na index z lewa i prawa strona
+    //jesli mniejsza z lewej lub z prawej to ustawiamy smallest na indeks dziecka i potem porownanie smallest z index 
+    //jesli sa rozne to zamieniamy miesjcami i wywolanie rekurenycjne dla tej funkcji ale juz z argumenetem smallest
     void heapifyDown(int index) {
         int leftChild = 2 * index + 1;
         int rightChild = 2 * index + 2;
@@ -52,16 +57,19 @@ private:
     }
 
 public:
-    PriorityQueue() {}
+    PriorityQueue() {} //tworzenie kontruktora
 
-    ~PriorityQueue() {}
+    ~PriorityQueue() {}//destruktor zwalnia pamiec po jej wywolaniu
 
+    //dodanie nowego elementu o wartosci Val i prio Pri, tworzony jest nowy wezele Node, na podstawie podanych wartosci
+    //a potem oddjae go na koniec wektora heap i ykonuje operacje heapifyup
     void push(T val, int pri) {
         Node newNode(val, pri);
         heap.push_back(newNode);
         heapifyUp(heap.size() - 1);
     }
-
+    //usuwa element o najwyzszym prio, sprawdza czy kolejka jest pusta,
+    //nastepnie zachodzi zmiana pierwszego z ostatnim elementem i go usuwa, i robi heapifydown aby przywrocic funkcjonalnosc kopca
     void pop() {
         if (heap.empty()) {
             throw runtime_error("Kolejka priorytetowa jest pusta");
@@ -70,14 +78,14 @@ public:
         heap.pop_back();
         heapifyDown(0);
     }
-
+    //zwraca element o najwyzszym prio czyli element na szyczcie kopca, rowneiz sprawdza czy jest pusta
     T top() {
         if (heap.empty()) {
             throw runtime_error("Kolejka priorytetowa jest pusta");
         }
         return heap[0].value;
     }
-
+    //sprawdza czy kolejka jest pusta
     bool empty() {
         return heap.empty();
     }
@@ -288,7 +296,7 @@ int** createAdjacencyMatrix(const Edge* graph, int numVertices, int numEdges) {
 
     return adjacencyMatrix;
 }
-//tworzenie listy sasiedztwa
+//tworzenie listy sasiedztwa na podstawie grafu
 vector<vector<pair<int, int>>> createAdjacencyList(const Edge* graph, int numVertices, int numEdges) {
     vector<vector<pair<int, int>>> adjacencyList(numVertices);
 
@@ -303,7 +311,7 @@ vector<vector<pair<int, int>>> createAdjacencyList(const Edge* graph, int numVer
 
     return adjacencyList;
 }
-//tworzenie listy krawedzi
+//tworzenie listy krawedzi na podstawie grafu
 vector<Edge> generateEdgeList(const Edge* graph, int numEdges) {
     vector<Edge> edgeList;
     for (int i = 0; i < numEdges * 2; i++) {
@@ -330,12 +338,13 @@ int main() {
     {
         cout << "TEST dla pary numer " << i + 1 << endl;
         int warunek = numVertices[i]- 1;
-        if (numEdges[i] <= warunek)
+        if (numEdges[i] <= warunek) 
         {
             numEdges[i] = warunek;
         }
         Edge* graph = generateGraph(numVertices[i], numEdges[i]);
 
+            //liczenie czasu operacji
             auto start = chrono::high_resolution_clock::now();
         int** adjacencyMatrix = createAdjacencyMatrix(graph, numVertices[i], numEdges[i]);
         primMST_ms(adjacencyMatrix, numVertices[i]);
@@ -344,6 +353,7 @@ int main() {
             auto duration = chrono::duration<double, milli>(end - start).count();
             cout << "Czas wykonania operacji Macierzy: " << duration << " ms" << endl << endl;
 
+            //liczenie czasu operacji
             start = chrono::high_resolution_clock::now();
         vector<vector<pair<int, int>>> adjacencyList = createAdjacencyList(graph, numVertices[i], numEdges[i]);
         primMST_ls(adjacencyList);
@@ -352,6 +362,7 @@ int main() {
             duration = chrono::duration<double, milli>(end - start).count();
             cout << "Czas wykonania operacji Listy_Sasiadow: " << duration << " ms" << endl << endl;
 
+             //liczenie czasu operacji
              start = chrono::high_resolution_clock::now();
         vector<Edge> edgeList = generateEdgeList(graph, numEdges[i]);
         primMST_lk(edgeList, numVertices[i], numEdges[i]);
@@ -360,6 +371,8 @@ int main() {
              duration = chrono::duration<double, milli>(end - start).count();
              cout << "Czas wykonania operacji Listy_Krawedzi: " << duration << " ms" << endl << endl;
 
+
+        //zwalanianie pamieci 
         deleteAdjacencyMatrix(adjacencyMatrix, numVertices[i]);
         delete[] graph;
         cout << "KONIEC TESTU dla pary "<<i+1 << endl<<endl;

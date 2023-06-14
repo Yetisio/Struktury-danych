@@ -325,6 +325,7 @@ int main() {
         }
         Edge* graph = generateGraph(numVertices[i], numEdges[i]);
 
+        //liczenie czasu operacji
         auto start = chrono::high_resolution_clock::now();
         int** adjacencyMatrix = createAdjacencyMatrix(graph, numVertices[i], numEdges[i]);
         primMST_ms(adjacencyMatrix, numVertices[i]);
@@ -333,6 +334,7 @@ int main() {
         auto duration = chrono::duration<double, milli>(end - start).count();
         cout << "Czas wykonania operacji Macierzy: " << duration << " ms" << endl << endl;
 
+        //liczenie czasu operacji
         start = chrono::high_resolution_clock::now();
         vector<vector<pair<int, int>>> adjacencyList = createAdjacencyList(graph, numVertices[i], numEdges[i]);
         primMST_ls(adjacencyList);
@@ -341,6 +343,7 @@ int main() {
         duration = chrono::duration<double, milli>(end - start).count();
         cout << "Czas wykonania operacji Listy_Sasiadow: " << duration << " ms" << endl << endl;
 
+        //liczenie czasu operacji
         start = chrono::high_resolution_clock::now();
         vector<Edge> edgeList = generateEdgeList(graph, numEdges[i]);
         primMST_lk(edgeList, numVertices[i], numEdges[i]);
@@ -349,6 +352,8 @@ int main() {
         duration = chrono::duration<double, milli>(end - start).count();
         cout << "Czas wykonania operacji Listy_Krawedzi: " << duration << " ms" << endl << endl;
 
+
+        //zwalanianie pamieci
         deleteAdjacencyMatrix(adjacencyMatrix, numVertices[i]);
         delete[] graph;
         cout << "KONIEC TESTU dla pary " << i + 1 << endl << endl;
