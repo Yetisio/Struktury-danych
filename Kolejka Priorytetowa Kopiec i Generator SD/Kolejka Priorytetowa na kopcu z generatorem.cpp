@@ -1,5 +1,4 @@
-﻿#include <iostream>
-#include <stdexcept>
+﻿#include <stdexcept>
 #include <vector>
 #include <ctime>
 #include <climits>
@@ -7,6 +6,8 @@
 #include <iterator>
 #include <sstream>
 #include <chrono>
+#include <iostream>
+
 using namespace std;
 
 template <typename T>
@@ -90,140 +91,14 @@ public:
         return heap.empty();
     }
 };
-
-// Algorytm Prima dla macierzy sasiedztwa
-void primMST_ms(int** graph, int numVertices) {
-    int* parent = new int[numVertices];
-    int* key = new int[numVertices];
-    bool* mstSet = new bool[numVertices];
-
-    for (int i = 0; i < numVertices; i++) {
-        key[i] = INT_MAX;
-        mstSet[i] = false;
-    }
-
-    PriorityQueue<int> pq;
-    pq.push(0, 0);
-    key[0] = 0;
-    parent[0] = -1;
-
-    while (!pq.empty()) {
-        int u = pq.top();
-        pq.pop();
-        mstSet[u] = true;
-
-        for (int v = 0; v < numVertices; v++) {
-            if (graph[u][v] && !mstSet[v] && graph[u][v] < key[v]) {
-                parent[v] = u;
-                key[v] = graph[u][v];
-                pq.push(v, key[v]);
-            }
-        }
-    }
-
-    cout << "Minimalne drzewo rozpinajace:" << endl;
-    cout << "Krawedzie     Waga" << endl;
-    for (int i = 1; i < numVertices; i++) {
-        cout << parent[i] << " - " << i << " \t\t" << graph[i][parent[i]] << endl;
-    }
-
-    delete[] parent;
-    delete[] key;
-    delete[] mstSet;
-}
-//dla listy sasiedztwa
-void primMST_ls(const vector<vector<pair<int, int>>>& adjacencyList) {
-    int numVertices = adjacencyList.size();
-    int* parent = new int[numVertices];
-    int* key = new int[numVertices];
-    bool* mstSet = new bool[numVertices];
-
-    for (int i = 0; i < numVertices; i++) {
-        key[i] = INT_MAX;
-        mstSet[i] = false;
-    }
-
-    PriorityQueue<int> pq;
-    pq.push(0, 0);
-    key[0] = 0;
-    parent[0] = -1;
-
-    while (!pq.empty()) {
-        int u = pq.top();
-        pq.pop();
-        mstSet[u] = true;
-
-        for (const auto& neighbor : adjacencyList[u]) {
-            int v = neighbor.first;
-            int weight = neighbor.second;
-
-            if (!mstSet[v] && weight < key[v]) {
-                parent[v] = u;
-                key[v] = weight;
-                pq.push(v, key[v]);
-            }
-        }
-    }
-
-    cout << "Minimalne drzewo rozpinajace:" << endl;
-    cout << "Krawedzie     Waga" << endl;
-    for (int i = 1; i < numVertices; i++) {
-        cout << parent[i] << " - " << i << " \t\t" << key[i] << endl;
-    }
-
-    delete[] parent;
-    delete[] key;
-    delete[] mstSet;
-}
 struct Edge {
     int source;
     int destination;
     int weight;
 };
-//dla listy krawedzi
-void primMST_lk(const vector<Edge>& edgeList, int numVertices, int numEdges) {
-    int* parent = new int[numVertices];
-    int* key = new int[numVertices];
-    bool* mstSet = new bool[numVertices];
 
-    for (int i = 0; i < numVertices; i++) {
-        key[i] = INT_MAX;
-        mstSet[i] = false;
-    }
 
-    PriorityQueue<int> pq;
-    pq.push(0, 0);
-    key[0] = 0;
-    parent[0] = -1;
 
-    while (!pq.empty()) {
-        int u = pq.top();
-        pq.pop();
-        mstSet[u] = true;
-
-        for (int i = 0; i < numEdges; i++) {
-            const Edge& edge = edgeList[i];
-            if ((edge.source == u || edge.destination == u) && !mstSet[edge.destination]) {
-                int v = (edge.source == u) ? edge.destination : edge.source;
-                if (edge.weight < key[v]) {
-                    parent[v] = u;
-                    key[v] = edge.weight;
-                    pq.push(v, key[v]);
-                }
-            }
-        }
-    }
-
-    cout << "Minimalne drzewo rozpinajace:" << endl;
-    cout << "Krawedzie     Waga" << endl;
-    for (int i = 1; i < numVertices; i++) {
-        cout << parent[i] << " - " << i << " \t\t" << key[i] << endl;
-    }
-
-    delete[] parent;
-    delete[] key;
-    delete[] mstSet;
-};
 // Funkcja sprawdza, czy graf jest spójny
 bool isConnected(bool* visited, int numVertices) {
     for (int i = 0; i < numVertices; ++i) {
@@ -290,10 +165,9 @@ int** createAdjacencyMatrix(const Edge* graph, int numVertices, int numEdges) {
         int destination = graph[i].destination;
         int weight = graph[i].weight;
 
-           adjacencyMatrix[source][destination] = weight;
-           adjacencyMatrix[destination][source] = weight;
+        adjacencyMatrix[source][destination] = weight;
+        adjacencyMatrix[destination][source] = weight;
     }
-
     return adjacencyMatrix;
 }
 //tworzenie listy sasiedztwa na podstawie grafu
@@ -321,6 +195,144 @@ vector<Edge> generateEdgeList(const Edge* graph, int numEdges) {
 }
 
 
+// Algorytm Prima dla macierzy sasiedztwa
+void primMST_ms(int** graph, int numVertices) {
+    int* parent = new int[numVertices];
+    int* key = new int[numVertices];
+    bool* mstSet = new bool[numVertices];
+
+    for (int i = 0; i < numVertices; i++) {
+        key[i] = INT_MAX;
+        mstSet[i] = false;
+    }
+
+    PriorityQueue<int> pq;
+    pq.push(0, 0);
+    key[0] = 0;
+    parent[0] = -1;
+
+    while (!pq.empty()) {
+        int u = pq.top();
+        pq.pop();
+        mstSet[u] = true;
+
+        for (int v = 0; v < numVertices; v++) {
+            if (graph[u][v] && !mstSet[v] && graph[u][v] < key[v]) {
+                parent[v] = u;
+                key[v] = graph[u][v];
+                pq.push(v, key[v]);
+            }
+        }
+    }
+
+    cout << "Minimalne drzewo rozpinajace:" << endl;
+    cout << "Krawedzie     Waga" << endl;
+    for (int i = 1; i < numVertices; i++) {
+        cout << parent[i] << " - " << i << " \t\t" << graph[i][parent[i]] << endl;
+    }
+
+    delete[] parent;
+    delete[] key;
+    delete[] mstSet;
+}
+
+
+
+
+
+
+
+
+//dla listy sasiedztwa
+void primMST_ls(const vector<vector<pair<int, int>>>& adjacencyList) {
+    int numVertices = adjacencyList.size();
+    int* parent = new int[numVertices];
+    int* key = new int[numVertices];
+    bool* mstSet = new bool[numVertices];
+
+    for (int i = 0; i < numVertices; i++) {
+        key[i] = INT_MAX;
+        mstSet[i] = false;
+    }
+
+    PriorityQueue<int> pq;
+    pq.push(0, 0);
+    key[0] = 0;
+    parent[0] = -1;
+
+    while (!pq.empty()) {
+        int u = pq.top();
+        pq.pop();
+        mstSet[u] = true;
+
+        for (const auto& neighbor : adjacencyList[u]) {
+            int v = neighbor.first;
+            int weight = neighbor.second;
+
+            if (!mstSet[v] && weight < key[v]) {
+                parent[v] = u;
+                key[v] = weight;
+                pq.push(v, key[v]);
+            }
+        }
+    }
+
+    cout << "Minimalne drzewo rozpinajace:" << endl;
+    cout << "Krawedzie     Waga" << endl;
+    for (int i = 1; i < numVertices; i++) {
+        cout << parent[i] << " - " << i << " \t\t" << key[i] << endl;
+    }
+
+    delete[] parent;
+    delete[] key;
+    delete[] mstSet;
+}
+
+//dla listy krawedzi
+void primMST_lk(const vector<Edge>& edgeList, int numVertices, int numEdges) {
+    int* parent = new int[numVertices];
+    int* key = new int[numVertices];
+    bool* mstSet = new bool[numVertices];
+
+    for (int i = 0; i < numVertices; i++) {
+        key[i] = INT_MAX;
+        mstSet[i] = false;
+    }
+
+    PriorityQueue<int> pq;
+    pq.push(0, 0);
+    key[0] = 0;
+    parent[0] = -1;
+
+    while (!pq.empty()) {
+        int u = pq.top();
+        pq.pop();
+        mstSet[u] = true;
+
+        for (int i = 0; i < numEdges; i++) {
+            const Edge& edge = edgeList[i];
+            if ((edge.source == u || edge.destination == u) && !mstSet[edge.destination]) {
+                int v = (edge.source == u) ? edge.destination : edge.source;
+                if (edge.weight < key[v]) {
+                    parent[v] = u;
+                    key[v] = edge.weight;
+                    pq.push(v, key[v]);
+                }
+            }
+        }
+    }
+
+    cout << "Minimalne drzewo rozpinajace:" << endl;
+    cout << "Krawedzie     Waga" << endl;
+    for (int i = 1; i < numVertices; i++) {
+        cout << parent[i] << " - " << i << " \t\t" << key[i] << endl;
+    }
+
+    delete[] parent;
+    delete[] key;
+    delete[] mstSet;
+}
+
 // Funkcja zwalniająca pamięć zajmowaną przez macierz sąsiedztwa
 void deleteAdjacencyMatrix(int** adjacencyMatrix, int numVertices) {
     for (int i = 0; i < numVertices; i++) {
@@ -331,51 +343,58 @@ void deleteAdjacencyMatrix(int** adjacencyMatrix, int numVertices) {
 
 
 int main() {
-    int numVertices[] = { 5 , 7 , 6 , 4 };  // Liczba wierzchołków grafu 5, 7, 3, 6, 4
-    int numEdges[] = { 8 , 12 , 10 , 6 };     // Liczba krawędzi grafu 8, 12, 3, 10, 6
+    int numVertices[] = { 10 , 20 , 40 , 80 , 160 };  // Liczba wierzchołków grafu 5, 7, 3, 6, 4
+    
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 5; i++)
     {
+        int numEdges[] = { static_cast<int>(0.1  * numVertices[i] * (numVertices[i] - 1) / 2),
+                           static_cast<int>(0.3  * numVertices[i] * (numVertices[i] - 1) / 2),
+                           static_cast<int>(0.5  * numVertices[i] * (numVertices[i] - 1) / 2),
+                           static_cast<int>(0.7  * numVertices[i] * (numVertices[i] - 1) / 2),
+                           static_cast<int>(0.95 * numVertices[i] * (numVertices[i] - 1) / 2) };
+
+
         cout << "TEST dla pary numer " << i + 1 << endl;
-        int warunek = numVertices[i]- 1;
-        if (numEdges[i] <= warunek) 
+        int warunek = numVertices[i] - 1;
+        if (numEdges[i] <= warunek)
         {
             numEdges[i] = warunek;
         }
         Edge* graph = generateGraph(numVertices[i], numEdges[i]);
 
-            //liczenie czasu operacji
-            auto start = chrono::high_resolution_clock::now();
+        //liczenie czasu operacji
+        auto start = chrono::high_resolution_clock::now();
         int** adjacencyMatrix = createAdjacencyMatrix(graph, numVertices[i], numEdges[i]);
         primMST_ms(adjacencyMatrix, numVertices[i]);
-            auto end = chrono::high_resolution_clock::now();
-            // Obliczenie czasu trwania w milisekudnach
-            auto duration = chrono::duration<double, milli>(end - start).count();
-            cout << "Czas wykonania operacji Macierzy: " << duration << " ms" << endl << endl;
+        auto end = chrono::high_resolution_clock::now();
+        // Obliczenie czasu trwania w milisekudnach
+        auto duration = chrono::duration<double, milli>(end - start).count();
+        cout << "Czas wykonania operacji Macierzy: " << duration << " ms" << endl << endl;
 
-            //liczenie czasu operacji
-            start = chrono::high_resolution_clock::now();
+        //liczenie czasu operacji
+        start = chrono::high_resolution_clock::now();
         vector<vector<pair<int, int>>> adjacencyList = createAdjacencyList(graph, numVertices[i], numEdges[i]);
         primMST_ls(adjacencyList);
-            end = chrono::high_resolution_clock::now();
-            // Obliczenie czasu trwania w milisekudnach
-            duration = chrono::duration<double, milli>(end - start).count();
-            cout << "Czas wykonania operacji Listy_Sasiadow: " << duration << " ms" << endl << endl;
+        end = chrono::high_resolution_clock::now();
+        // Obliczenie czasu trwania w milisekudnach
+        duration = chrono::duration<double, milli>(end - start).count();
+        cout << "Czas wykonania operacji Listy_Sasiadow: " << duration << " ms" << endl << endl;
 
-             //liczenie czasu operacji
-             start = chrono::high_resolution_clock::now();
+        //liczenie czasu operacji
+        start = chrono::high_resolution_clock::now();
         vector<Edge> edgeList = generateEdgeList(graph, numEdges[i]);
         primMST_lk(edgeList, numVertices[i], numEdges[i]);
-             end = chrono::high_resolution_clock::now();
-             // Obliczenie czasu trwania w milisekudnach
-             duration = chrono::duration<double, milli>(end - start).count();
-             cout << "Czas wykonania operacji Listy_Krawedzi: " << duration << " ms" << endl << endl;
+        end = chrono::high_resolution_clock::now();
+        // Obliczenie czasu trwania w milisekudnach
+        duration = chrono::duration<double, milli>(end - start).count();
+        cout << "Czas wykonania operacji Listy_Krawedzi: " << duration << " ms" << endl << endl;
 
 
         //zwalanianie pamieci 
         deleteAdjacencyMatrix(adjacencyMatrix, numVertices[i]);
         delete[] graph;
-        cout << "KONIEC TESTU dla pary "<<i+1 << endl<<endl;
+        cout << "KONIEC TESTU dla pary " << i + 1 << endl << endl;
     }
     return 0;
 }
